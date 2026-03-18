@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Email to Google Sheets Chrome Extension
 
 A powerful Chrome extension that automatically syncs emails from Gmail, Outlook, or IMAP to Google Sheets with advanced filtering and customization options.
@@ -552,3 +553,7 @@ MIT License - feel free to use this extension!
 ---
 
 **Enjoy syncing your emails! 🚀**
+=======
+# Extention
+Google extention for Mail to export
+>>>>>>> 4420f7daf72079338e5de0a352a219fdd40cfca9
