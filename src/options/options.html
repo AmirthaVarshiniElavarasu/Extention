@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email to Google Sheet - Settings</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📧 Email to Google Sheet Settings</h1>
+            <p>Configure your email sync preferences</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="general">General</button>
+            <button class="tab-btn" data-tab="email">Email</button>
+            <button class="tab-btn" data-tab="sheets">Sheets</button>
+            <button class="tab-btn" data-tab="filters">Filters</button>
+            <button class="tab-btn" data-tab="columns">Columns</button>
+        </nav>
+
+        <!-- General Tab -->
+        <div id="general" class="tab-content active">
+            <h2>General Settings</h2>
+            
+            <div class="form-group">
+                <label for="syncInterval">Sync Interval (minutes)</label>
+                <input type="number" id="syncInterval" min="1" max="1440" value="15">
+                <small>How often to automatically sync emails (1-1440)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="maxEmails">Maximum Emails per Sync</label>
+                <input type="number" id="maxEmails" min="1" max="500" value="100">
+                <small>Number of emails to fetch in each sync</small>
+            </div>
+
+            <div class="form-group checkbox">
+                <input type="checkbox" id="autoSync">
+                <label for="autoSync">Enable Auto-Sync</label>
+                <small>Automatically sync emails at intervals</small>
+            </div>
+
+            <div class="form-group checkbox">
+                <input type="checkbox" id="enableNotifications" checked>
+                <label for="enableNotifications">Enable Notifications</label>
+                <small>Show notifications when sync completes</small>
+            </div>
+
+            <button class="btn btn-primary" onclick="testConnections()">🧪 Test Connections</button>
+        </div>
+
+        <!-- Email Tab -->
+        <div id="email" class="tab-content">
+            <h2>Email Configuration</h2>
+
+            <div class="form-group">
+                <label for="emailProvider">Email Provider</label>
+                <select id="emailProvider">
+                    <option value="gmail">Gmail</option>
+                    <option value="outlook">Microsoft Outlook</option>
+                    <option value="imap">Generic IMAP</option>
+                </select>
+                <small>Choose your email provider</small>
+            </div>
+
+            <div id="imapSettings" class="hidden">
+                <div class="form-group">
+                    <label for="imapHost">IMAP Server Host</label>
+                    <input type="text" id="imapHost" placeholder="e.g., imap.gmail.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="imapPort">IMAP Server Port</label>
+                    <input type="number" id="imapPort" value="993">
+                </div>
+
+                <div class="form-group">
+                    <label for="imapEmail">Email Address</label>
+                    <input type="email" id="imapEmail" placeholder="your@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="imapPassword">Password</label>
+                    <input type="password" id="imapPassword" placeholder="Your password or app password">
+                </div>
+            </div>
+
+            <button class="btn btn-secondary" onclick="authorizeEmail()">🔐 Authorize Email Account</button>
+            <button class="btn btn-secondary" onclick="testEmailConnection()">✓ Test Email Connection</button>
+        </div>
+
+        <!-- Google Sheets Tab -->
+        <div id="sheets" class="tab-content">
+            <h2>Google Sheets</h2>
+
+            <div class="form-group">
+                <label for="spreadsheetId">Spreadsheet ID</label>
+                <input type="text" id="spreadsheetId" placeholder="Paste your Spreadsheet ID">
+                <small>Get from URL: /spreadsheets/d/<strong>SPREADSHEET_ID</strong>/</small>
+            </div>
+
+            <div class="form-group">
+                <label for="sheetName">Sheet Name</label>
+                <input type="text" id="sheetName" value="Emails" placeholder="Enter sheet name">
+            </div>
+
+            <div class="form-group checkbox">
+                <input type="checkbox" id="appendMode" checked>
+                <label for="appendMode">Append Mode</label>
+                <small>Add new rows instead of replacing</small>
+            </div>
+
+            <div class="form-group checkbox">
+                <input type="checkbox" id="includeHeaders" checked>
+                <label for="includeHeaders">Include Headers</label>
+                <small>Add column headers to the sheet</small>
+            </div>
+
+            <button class="btn btn-secondary" onclick="authorizeSheets()">🔐 Authorize Google Account</button>
+            <button class="btn btn-secondary" onclick="createNewSheet()">➕ Create New Sheet</button>
+            <button class="btn btn-secondary" onclick="testSheetsConnection()">✓ Test Sheets Connection</button>
+        </div>
+
+        <!-- Filters Tab -->
+        <div id="filters" class="tab-content">
+            <h2>Email Filters</h2>
+            <p class="section-description">Add filters to sync only specific emails</p>
+
+            <div class="form-group">
+                <label for="filterType">Filter Type</label>
+                <select id="filterType">
+                    <option value="sender">From (Sender)</option>
+                    <option value="subject">Subject</option>
+                    <option value="hasAttachment">Has Attachment</option>
+                    <option value="label">Gmail Label</option>
+                    <option value="folder">Folder</option>
+                    <option value="date">Date Range</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="filterValue">Filter Value</label>
+                <input type="text" id="filterValue" placeholder="e.g., boss@company.com">
+            </div>
+
+            <div class="form-group">
+                <label for="filterName">Filter Name (Optional)</label>
+                <input type="text" id="filterName" placeholder="e.g., Important Emails">
+            </div>
+
+            <button class="btn btn-secondary" onclick="addFilter()">➕ Add Filter</button>
+
+            <div id="filtersList" class="filters-list"></div>
+        </div>
+
+        <!-- Columns Tab -->
+        <div id="columns" class="tab-content">
+            <h2>Column Mapping</h2>
+            <p class="section-description">Map email fields to Google Sheet columns</p>
+
+            <div id="columnMapping" class="column-mapping"></div>
+
+            <button class="btn btn-secondary" onclick="resetColumnMapping()">↺ Reset to Default</button>
+        </div>
+
+        <div class="footer">
+            <button class="btn btn-primary" onclick="saveSettings()">💾 Save All Settings</button>
+            <button class="btn btn-secondary" onclick="resetSettings()">⤴️ Reset to Default</button>
+            <div id="saveStatus" class="save-status hidden" style="text-align: center; margin-top: 12px; color: #34a853;"></div>
+        </div>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>

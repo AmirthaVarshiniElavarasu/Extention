@@ -1,0 +1,137 @@
+/**
+ * Example Configuration File
+ * Copy this to your VS Code settings.json under the [emailToSheet] namespace
+ */
+
+{
+  "emailToSheet.emailProvider": "gmail",
+  
+  // Sync timing configuration
+  "emailToSheet.syncInterval": 15,
+  "emailToSheet.maxEmails": 100,
+  "emailToSheet.autoSync": false,
+  "emailToSheet.enableNotifications": true,
+
+  // Email filter rules - add as many as needed
+  "emailToSheet.filterRules": [
+    {
+      "name": "Work Emails",
+      "type": "sender",
+      "value": "@company.com",
+      "enabled": true
+    },
+    {
+      "name": "With Attachments",
+      "type": "hasAttachment",
+      "value": "true",
+      "enabled": false
+    },
+    {
+      "name": "Specific Subject",
+      "type": "subject",
+      "value": "Invoice",
+      "enabled": true
+    },
+    {
+      "name": "Gmail Label",
+      "type": "label",
+      "value": "Important",
+      "enabled": false
+    },
+    {
+      "name": "Recent Emails",
+      "type": "date",
+      "value": "2024-01-01",
+      "enabled": true
+    }
+  ],
+
+  // Column mapping - map email fields to sheet columns
+  "emailToSheet.columnMapping": {
+    "from": "A",
+    "to": "B",
+    "subject": "C",
+    "date": "D",
+    "body": "E",
+    "attachments": "F",
+    "labels": "G"
+  },
+
+  // Google Sheets settings
+  "emailToSheet.sheetSettings": {
+    "spreadsheetId": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t",
+    "sheetName": "Emails",
+    "appendMode": true,
+    "includeHeaders": true
+  },
+
+  // Optional: Enable debug logging
+  "emailToSheet.debug": false
+}
+
+/*
+EXAMPLES:
+
+Example 1: Sync emails from specific domain every hour
+{
+  "emailToSheet.emailProvider": "gmail",
+  "emailToSheet.autoSync": true,
+  "emailToSheet.syncInterval": 60,
+  "emailToSheet.filterRules": [
+    {
+      "name": "Company Emails",
+      "type": "sender",
+      "value": "@mycompany.com",
+      "enabled": true
+    }
+  ]
+}
+
+Example 2: Sync only emails with attachments (IMAP)
+{
+  "emailToSheet.emailProvider": "imap",
+  "emailToSheet.syncInterval": 30,
+  "emailToSheet.maxEmails": 50,
+  "emailToSheet.filterRules": [
+    {
+      "name": "Attachments Only",
+      "type": "hasAttachment",
+      "value": "true",
+      "enabled": true
+    }
+  ]
+}
+
+Example 3: Multi-filter setup (Outlook)
+{
+  "emailToSheet.emailProvider": "outlook",
+  "emailToSheet.autoSync": true,
+  "emailToSheet.syncInterval": 20,
+  "emailToSheet.filterRules": [
+    {
+      "name": "Invoices",
+      "type": "subject",
+      "value": "Invoice",
+      "enabled": true
+    },
+    {
+      "name": "Has Attachment",
+      "type": "hasAttachment",
+      "value": "true",
+      "enabled": true
+    },
+    {
+      "name": "From Finance",
+      "type": "sender",
+      "value": "finance@company.com",
+      "enabled": true
+    }
+  ],
+  "emailToSheet.columnMapping": {
+    "from": "A",
+    "subject": "B",
+    "date": "C",
+    "attachments": "D"
+  }
+}
+*/
